@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔗 Generator Undangan</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            background: #f0f2f5;
+            color: #333;
+            margin: 0;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            max-width: 450px;
+            margin: 20px auto;
+        }
+        h2 {
+            color: #075e54;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: 0.3s;
+            margin-bottom: 10px;
+        }
+        .btn-generate { background: #075e54; color: white; }
+        .btn-generate:hover { background: #064a42; }
+        .btn-whatsapp { background: #25d366; color: white; display: none; }
+        .btn-whatsapp:hover { background: #1fa055; }
+        .btn-copy { background: #333; color: white; display: none; }
+        .btn-copy:hover { background: #555; }
+        #hasilLink {
+            margin-top: 20px;
+            word-break: break-all;
+            color: #128c7e;
+            font-size: 14px;
+            padding: 10px;
+            background: #e7f3f0;
+            border-radius: 5px;
+            display: none;
+            font-family: monospace;
+        }
+        .note {
+            font-size: 12px;
+            color: #888;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>💌 Generator Undangan Digital</h2>
+    <input type="text" id="inputNama" placeholder="Ketik Nama Tamu (Contoh: Sekar & Bunda)" autocomplete="off">
+    
+    <button class="btn-generate" onclick="generate()">1. Buat Link Undangan</button>
+    
+    <div id="hasilLink"></div>
+    
+    <button id="btnWA" class="btn-whatsapp" onclick="kirimWA()">2. Kirim via WhatsApp</button>
+    <button id="btnCopy" class="btn-copy" onclick="copyLink()">📋 Salin Link Saja</button>
+
+    <p class="note">💡 Link akan otomatis menampilkan nama tamu saat dibuka.</p>
+</div>
+
+<script>
+let linkFinal = "";
+
+function generate() {
+    const inputNama = document.getElementById('inputNama').value.trim();
+    if (!inputNama) {
+        alert("⚠️ Mohon masukkan nama tamu terlebih dahulu.");
+        return;
+    }
+
+    // 🔥 GANTI DENGAN LINK UNDANGANMU DI GITHUB!
+    const baseUrl = "https://namamu.github.io/wedding/"; // ← GANTI INI!
+    
+    // Gunakan URLSearchParams untuk hindari kesalahan encoding manual
+    const url = new URL(baseUrl);
+    url.searchParams.set("to", inputNama);
+    linkFinal = url.toString();
+
+    // Tampilkan
+    document.getElementById('hasilLink').innerText = linkFinal;
+    document.getElementById('hasilLink').style.display = "block";
+    document.getElementById('btnWA').style.display = "block";
+    document.getElementById('btnCopy').style.display = "block";
+}
+
+function kirimWA() {
+    if (!linkFinal) return;
+
+    const namaTamu = new URL(linkFinal).searchParams.get("to");
+    const pesan = `Assalamu’alaikum / Halo ${namaTamu} 🙏\n\nDengan penuh syukur, kami bermaksud mengundang Bapak/Ibu/Saudara/i dalam rangka pernikahan kami.\n\n✨ Detail acara & lokasi dapat dilihat di sini:\n${linkFinal}\n\nKehadiran Bapak/Ibu adalah doa & kebahagiaan tersendiri bagi kami. Terima kasih 🌸`;
+
+    // ✅ LINK YANG BENAR — sesuai knowledge base (tanpa spasi, pakai wa.me)
+    const encodedPesan = encodeURIComponent(pesan);
+    const urlWA = `https://wa.me/?text=${encodedPesan}`;
+    
+    window.open(urlWA, '_blank');
+}
+
+function copyLink() {
+    if (!linkFinal) return;
+    navigator.clipboard.writeText(linkFinal)
+        .then(() => {
+            alert("✅ Link berhasil disalin!\n\nSilakan tempel di WhatsApp, Instagram, atau bagikan langsung.");
+        })
+        .catch(() => {
+            alert("❌ Gagal menyalin. Coba salin manual dari kotak di atas.");
+        });
+}
+</script>
+
+</body>
+</html>
