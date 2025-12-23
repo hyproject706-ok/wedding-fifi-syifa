@@ -94,3 +94,37 @@ document.querySelectorAll('section').forEach(section => {
       heartObserver.observe(section);
   }
 });
+
+const audio = document.getElementById("bgMusic");
+const audioBtn = document.getElementById("audioBtn");
+
+let isPlaying = false;
+
+/* AUTOPLAY SAH (SETELAH USER TAP) */
+function startAudio() {
+  if (isPlaying) return;
+
+  audio.volume = 0.8;
+  audio.play().then(() => {
+    isPlaying = true;
+    audioBtn.innerText = "🔊";
+  }).catch(() => {
+    console.log("Autoplay blocked");
+  });
+}
+
+/* TRIGGER GESTURE YANG SAH */
+["click", "touchstart"].forEach(evt => {
+  document.addEventListener(evt, startAudio, { once: true });
+});
+
+/* TOGGLE AUDIO */
+audioBtn.addEventListener("click", () => {
+  if (audio.paused) {
+    audio.play();
+    audioBtn.innerText = "🔊";
+  } else {
+    audio.pause();
+    audioBtn.innerText = "🔇";
+  }
+});
